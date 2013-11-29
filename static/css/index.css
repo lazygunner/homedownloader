@@ -1,0 +1,40 @@
+.graph { 
+   position: relative; 
+   width: 200px; 
+   border: 1px solid #B1D632; 
+   padding: 2px; 
+   margin-bottom: .5em;                    
+   }
+.graph .bar { 
+   display: block;    
+   position: relative;
+   background: #B1D632; 
+   text-align: center; 
+   color: #333; 
+   height: 2em; 
+   line-height: 2em;                                    
+}
+.graph .bar span { position: absolute; left: 1em; }
+
+.error
+{
+	color: red;
+}
+.success
+{
+	font-weight: bold;
+}
+
+.button {
+	border-radius: 12px;
+	box-shadow: 1px 3px 5px #555;
+	background: linear-gradient(top center, #FFF098, #A69520);
+	
+	
+}
+
+.downloadLinks{
+	margin-left: 30%;
+	
+	
+}

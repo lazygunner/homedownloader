@@ -1,0 +1,41 @@
+<html>
+<title>home downloader!</title>
+<head>
+<link rel="stylesheet" type="text/css" href="/static/css/index.css" />
+
+{% block footer_javascript_page %}
+<script language="JavaScript" type="text/javascript" src="/static/js/jquery-1.10.1.js"></script>
+<script language="JavaScript" type="text/javascript" src="/static/js/csrf.js"></script>
+<script language="JavaScript" type="text/javascript" src="/static/js/index.js"></script>
+{% endblock footer_javascript_page %}
+
+</head>
+<body>
+
+
+		<dl>
+			<dt style = "margin-left: 42%; margin-right: auto;">下载链接：</dt>
+			<dd><input type="text" id="link" style = "margin-left: 42%; margin-right: auto;"><button class="button" id="download">下载</button></dd>
+		</dl>
+
+
+<div>
+	<ul id="linkList">
+		{% for link in links %}
+		    <li class="downloadLinks">{{ link }}</li>
+		{% endfor %}
+	</ul>
+	
+</div>
+
+
+<ul id="results"></ul>
+<div class="graph" style="display: none;margin-left: 42%;">
+<strong class="bar" style="width: 0%;display: none;"><span id="perCon">0%</span></strong>
+</div> 
+<p id="speed" style="display: none;margin-left: 42%;"></p>
+<p id="eta" style="display: none;margin-left: 42%;"></p>
+
+
+</body>
+</html>
