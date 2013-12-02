@@ -1,11 +1,10 @@
 <html>
 <title>home downloader!</title>
 <head>
-<link rel="stylesheet" type="text/css" href="/static/css/index.css" />
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/index.css')}}" />
 
 {% block footer_javascript_page %}
 <script language="JavaScript" type="text/javascript" src="/static/js/jquery-1.10.1.js"></script>
-<script language="JavaScript" type="text/javascript" src="/static/js/csrf.js"></script>
 <script language="JavaScript" type="text/javascript" src="/static/js/index.js"></script>
 {% endblock footer_javascript_page %}
 
@@ -15,7 +14,7 @@
 
 		<dl>
 			<dt style = "margin-left: 42%; margin-right: auto;">下载链接：</dt>
-			<dd><input type="text" id="link" style = "margin-left: 42%; margin-right: auto;"><button class="button" id="download">下载</button></dd>
+			<dd><input type="text" id="link" style = "margin-left: 42%; margin-right: auto;"><button class="button" id="download">下载</button><button class="button" id="check">Status</button></dd>
 		</dl>
 
 

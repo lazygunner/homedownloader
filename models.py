@@ -1,31 +1,41 @@
+import sys
+import threading 
 
-
-class Links(objects):
+class Links(object):
     
-    def __init__(self):
+    def __init__(self, app):
         self.link_list = []
+        self.llock = threading.Lock()
 
     # add the links from autodownloader
     def add_links_from_ad(self, links):
-        self.link_list.append(map(lambda link:link['type']='ad', links))
+        self.llock.acquire()
+        for link in links:
+            link['type'] = 'ad'
+            self.link_list.append(link)
+        self.llock.release()
 
-    def get_list_top():
+    def get_list_top(self):
         try:
-            link_obj = links.pop(0)
+            self.llock.acquire()
+            print len(self.link_list)
+            link_obj = self.link_list.pop(0)
             if(link_obj['type'] == 'ad'):
                 link = link_obj['ed2k_link']
                 if(link != ''):
                     #reinsert the link to list to prevent lost
-                    links.insert(0, link)
-                    return link
+                    self.link_list.insert(0, link_obj)
                 else:
-                    return 'invalid_link'
-             else:
-                return 'invalid_type'
-
-         except:
-            return 'list_empty'
+                    link_obj = 'invalid_link'
+            else:
+                link_obj = 'invalid_type'
+        except:
+            link_obj = 'list_empty'
+            print "Unexpected error:", sys.exc_info()
+        finally:
+            self.llock.release()
+            return link_obj
     
     # after the download finished of the top link
-    def pop_top():
+    def pop_top(self):
         return links.pop(0)

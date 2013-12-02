@@ -27,8 +27,8 @@ var DownloadStatus = function()
 		 			
 		 			$(".bar").css("width", perString);
 		 			$("#perCon").text(perString);
-		 			$("#speed").text("下载速度:" + speed);
-		 			$("#eta").text("剩余时间:" + eta);
+		 			$("#speed").text("Speed:" + speed);
+		 			$("#eta").text("Remain:" + eta);
 		 			if(stat == 'ing'){		 				
 						DownloadStatus.buttonDownPress();
 						return;
@@ -62,9 +62,11 @@ var DownloadStatus = function()
 		
 	var buttonDownPress = function()
 		{
+            
+			showProgress();
 			$.ajax({data:"", dataType:"text", error: registerError, 
-				success: registerSuccess, type: "POST",
-				url: "/check/"});
+				success: registerSuccess, type: "GET",
+				url: "/check"});
 		};
 	
 	return {
@@ -85,7 +87,6 @@ var Download = function(){
 				if(data.length > 50)
 					data = data.substr(0, 47) + '...';
 				$("#linkList").append("<li class=\"downloadLinks\">" + data + "</li>");
-				showProgress();
 				DownloadStatus.buttonDownPress();
 
 				return;
@@ -95,7 +96,7 @@ var Download = function(){
 		{
 				var downloadLink = {'link':$("#link").val()};
 				if(downloadLink.link == ''){
-						alert("连接地址为空！");
+						alert("Empty Link!");
 						return;
 				}
 					
@@ -132,6 +133,7 @@ var showProgress = function() {
 $(document).ready(function() {
 
 	$("#download").click(Download.buttonPress);
+    $("#check").click(DownloadStatus.buttonDownPress);
 	if($('.downloadLinks').size() > 0){
 		showProgress();
     $(".downloadLinks").each(function(){
