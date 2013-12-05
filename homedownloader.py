@@ -8,7 +8,7 @@ import threading
 
 app = Flask(__name__)
 
-app.config['UPDATE_URL'] = 'http://tv.xdream.info/download/'
+app.config['UPDATE_URL'] = 'https://tv.xdream.info/download/'
 app.config['AD_USERNAME'] = 'gymgunner@gmail.com'
 app.config['AD_PASSWORD'] = '880420'
 
