@@ -22,6 +22,7 @@ class Downloader(object):
         
         self.links = links
         self.dlock = dlock
+        self.ad = app.config['AD']
         self.d_thread = threading.Thread(target=self.download_thread,\
             name='download_thread')
     
@@ -35,6 +36,18 @@ class Downloader(object):
                 else:
                     ret = self.download_link(link_obj)
                     print ret
+                    if ret == 'finished':
+                        if(self.link_obj['type'] == 'ad'):
+                            index_int = int(link_obj['index'])
+                            s = index_int / 100
+                            e = index_int - s
+                            l_s = str(s)
+                            l_e = str(e)
+                            self.ad.post_download_status(
+                                link_obj['show_id'], l_s=l_s, l_e=l_e)
+
+                        self.links.pop()
+
             else:
                 print 'empty'
                 try:
