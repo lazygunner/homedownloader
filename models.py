@@ -11,7 +11,6 @@ class Links(object):
     def add_links_from_ad(self, links):
         self.llock.acquire()
         for link in links:
-            link['type'] = 'ad'
             self.link_list.append(link)
         self.llock.release()
 
@@ -20,7 +19,7 @@ class Links(object):
             self.llock.acquire()
             print len(self.link_list)
             link_obj = self.link_list.pop(0)
-            if(link_obj['type'] == 'ad'):
+            if(link_obj['type'] == 'ad' or link_obj['type'] == 'dl'):
                 link = link_obj['ed2k_link']
                 if(link != ''):
                     #reinsert the link to list to prevent lost
@@ -38,4 +37,4 @@ class Links(object):
     
     # after the download finished of the top link
     def pop_top(self):
-        return links.pop(0)
+        return self.link_list.pop(0)

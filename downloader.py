@@ -31,13 +31,14 @@ class Downloader(object):
             if len(self.links.link_list) > 0:
                 link_obj = self.links.get_list_top()
                 if link_obj.__class__ == type('str'):
-                    print link_obj
                     time.sleep(5)
                 else:
                     ret = self.download_link(link_obj)
-                    print ret
+                    print 'ret:' + ret
+                    time.sleep(10)
                     if ret == 'finished':
-                        if(self.link_obj['type'] == 'ad'):
+                        print link_obj
+                        if(link_obj['type'] == 'ad'):
                             index_int = int(link_obj['index'])
                             s = index_int / 100
                             e = index_int - s
@@ -45,13 +46,21 @@ class Downloader(object):
                             l_e = str(e)
                             self.ad.post_download_status(
                                 link_obj['show_id'], l_s=l_s, l_e=l_e)
-
-                        self.links.pop()
+                        else:
+                            self.ad.post_dl_completed(link_obj['ed2k_link'])
+                        self.links.pop_top()
+                        self.pipe = None
+                        self.is_downloading = False
+                    elif ret == 'no_resp':
+                        self.links.pop_top()
+                        self.pipe = None
+                        self.is_downloading = False
 
             else:
                 print 'empty'
                 try:
                     self.dlock.release()
+                    time.sleep(10)
                 except threading.ThreadError:
                     print 'non lock'
                     time.sleep(10)
@@ -78,8 +87,10 @@ class Downloader(object):
             r'(?P<per>\d{1,2})%\s*(?P<speed>.*?)\s(?P<eta>\w*)'
             )
         data=self.pipe.stderr.readline()
-        while data: 
-#            print data
+        count = 5
+        while data or count != 0: 
+            print 'ori' + data
+            
             m = pattern.search(data)
             if m:
                 self.current_percent = m.group('per')
@@ -87,10 +98,10 @@ class Downloader(object):
                 self.current_eta = m.group('eta')
                 self.current_status = 'ing'
                 self.pipe.stderr.flush()
-            elif re.search(r'.*?completed\..*', data) != None:
+            elif re.search(r'\[(?P<size>\d*)/(?P=size)\]', data) != None or\
+                    re.search(r'.*?bigger than expected.*?', data) != None:
+                print 'fi:' + data
                 self.current_percent = '100'
-                self.pipe = None
-                self.is_downloading = False
                 self.current_status = 'complete'
                 return 'finished'
             else:
@@ -98,10 +109,15 @@ class Downloader(object):
                 self.current_speed = '0'
                 self.current_eta = '0'
                 self.current_status = 'error'
+                print 'error:' + data
             
             self.pipe.stderr.flush()
             data=self.pipe.stderr.readline()
+            if data == '':
+                count -= 1
+                print 'count:' + str(count)
 
-
+        if data == '':
+            return 'no_resp'
 
         

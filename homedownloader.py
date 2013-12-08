@@ -8,9 +8,9 @@ import threading
 
 app = Flask(__name__)
 
-app.config['UPDATE_URL'] = 'https://tv.xdream.info/download/'
-app.config['AD_USERNAME'] = 'gymgunner@gmail.com'
-app.config['AD_PASSWORD'] = '880420'
+app.config['UPDATE_URL'] = 'http://localhost:5000/'
+app.config['AD_USERNAME'] = 'a@b.com'
+app.config['AD_PASSWORD'] = '123456'
 
 links = Links(app)
 dlock = threading.Lock()
