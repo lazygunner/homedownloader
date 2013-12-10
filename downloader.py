@@ -72,13 +72,19 @@ class Downloader(object):
         else:
             return 'is_downloading'
 
+        link = link_obj['ed2k_link']
         try:
-           
-            self.pipe = subprocess.Popen(
-                [sys.executable, '-u',self.lx_path, "download",\
-                link_obj['ed2k_link'], "-c", "--output-dir",\
-                self.out_dir], shell=False,\
-                stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            if re.search(r'http://', link) == None:            
+                self.pipe = subprocess.Popen(
+                    [sys.executable, '-u',self.lx_path, "download",\
+                    link_obj['ed2k_link'], "-c", "--output-dir",\
+                    self.out_dir], shell=False,\
+                    stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            else:
+                self.pipe = subprocess.Popen(
+                    ["wget", link, "-c", "-P", self.out_dir],\
+                    shell=False, stdout=subprocess.PIPE,\
+                    stderr= subprocess.PIPE)
         except:
             ret = 'lixian_cli_error'
 
@@ -88,7 +94,7 @@ class Downloader(object):
             )
         data=self.pipe.stderr.readline()
         count = 5
-        while data or count != 0: 
+        while data: 
             print 'ori' + data
             
             m = pattern.search(data)
@@ -113,9 +119,6 @@ class Downloader(object):
             
             self.pipe.stderr.flush()
             data=self.pipe.stderr.readline()
-            if data == '':
-                count -= 1
-                print 'count:' + str(count)
 
         if data == '':
             return 'no_resp'
